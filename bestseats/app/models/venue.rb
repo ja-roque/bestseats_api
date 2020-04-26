@@ -78,7 +78,6 @@ class Venue
         end
 
         break unless added_new_seat
-        puts seat_group.map(&:sequence_num)
       end
 
 
