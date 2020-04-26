@@ -3,6 +3,7 @@ class Venue
   ALPH = ("a".."z").to_a
 
   def initialize( venue_data )
+    venue_data =  venue_data.to_h
     @row_count = venue_data.dig(:venue, :layout, :rows)
     @column_count = venue_data.dig(:venue, :layout, :columns)
 
@@ -30,9 +31,10 @@ class Venue
 
     sorted_seats_by_distance = seats_with_distance.sort_by { |seat| seat.last }
     if count > 1
-      return get_best_group(sorted_seats_by_distance, @all_seats, count)
+      best_group = get_best_group(sorted_seats_by_distance, @all_seats, count)
+      return best_group if best_group
     end
-    sorted_seats_by_distance.first(count).first
+    sorted_seats_by_distance.first(count)
   end
 
   private

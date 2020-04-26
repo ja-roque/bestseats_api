@@ -32,7 +32,7 @@ RSpec.describe Venue, type: :model do
   context 'Venue#find_best_available_seats' do
     it 'should get the best available seat when one seat is requested' do
       new_venue = Venue.new(test_params2)
-      expect(new_venue.find_best_available_seats(1).first.seat_id).to eq :'b6'
+      expect(new_venue.find_best_available_seats(1).first.first.seat_id).to eq :'b6'
     end
 
     it 'should get the best available seat group when more than one seat is requested' do
