@@ -25,6 +25,66 @@ class Venue
     @best_seat = get_best_seat
   end
 
-  
+  def find_best_available_seats(count)
+    seats_with_distance = @available_seats.map{ |available_seat| [available_seat, (available_seat.row_num - @best_seat.row_num).abs + (available_seat.col_num - @best_seat.col_num).abs] }
+
+    sorted_seats_by_distance = seats_with_distance.sort_by { |seat| seat.last }
+    if count > 1
+      return get_best_group(sorted_seats_by_distance, @all_seats, count)
+    end
+    sorted_seats_by_distance.first(count)
+  end
+
+  private
+
+  def get_best_seat
+    @data.first[(@data.first.length - 1)/2]
+  end
+
+  def get_best_group(sorted_seats_by_distance, all_seats, count)
+    checked_seats = []
+    sorted_seats_by_distance.each do |good_seat|
+      good_seat = good_seat.first
+      next if checked_seats.include? good_seat
+
+      seat_group = [good_seat]
+
+      1.upto(count) do |i|
+        ungroupable = []
+
+        left_seat = all_seats[good_seat.sequence_num - i]
+        right_seat = all_seats[good_seat.sequence_num + i]
+
+        unless ungroupable.include?(left_seat) || seat_group.include?(left_seat)
+          if left_seat.row_num == good_seat.row_num && left_seat.available
+            seat_group << left_seat
+            checked_seats << left_seat
+            added_new_seat = true
+            return seat_group if seat_group.length == count
+          else
+            ungroupable << left_seat
+          end
+        end
+
+        unless ungroupable.include?(right_seat) || seat_group.include?(right_seat)
+          if right_seat.row_num == good_seat.row_num && right_seat.available
+            seat_group << right_seat
+            checked_seats << left_seat
+            added_new_seat = true
+            return seat_group if seat_group.length == count
+          else
+            ungroupable << right_seat
+          end
+        end
+
+        break unless added_new_seat
+        puts seat_group.map(&:sequence_num)
+      end
+
+
+    end
+
+    nil
+  end
 
 end
