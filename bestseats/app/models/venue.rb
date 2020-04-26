@@ -1,5 +1,5 @@
 class Venue
-  attr_accessor :row_count, :column_count, :available_seats_hash, :data
+  attr_accessor :row_count, :column_count, :available_seats_hash, :data, :best_seat, :all_seats, :available_seats
   ALPH = ("a".."z").to_a
 
   def initialize( venue_data )
@@ -32,7 +32,7 @@ class Venue
     if count > 1
       return get_best_group(sorted_seats_by_distance, @all_seats, count)
     end
-    sorted_seats_by_distance.first(count)
+    sorted_seats_by_distance.first(count).first
   end
 
   private
