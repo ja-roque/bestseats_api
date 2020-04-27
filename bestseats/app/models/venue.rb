@@ -58,34 +58,22 @@ class Venue
 
         left_seat = all_seats[good_seat.sequence_num - i]
         right_seat = all_seats[good_seat.sequence_num + i]
-
-        unless ungroupable.include?(left_seat) || seat_group.include?(left_seat)
-          if left_seat.row_num == good_seat.row_num && left_seat.available
-            seat_group << left_seat
-            checked_seats << left_seat
-            added_new_seat = true
-            if seat_group.length == count
-              seat_group.each { |seat| seat.best = true }
-              puts seat_group.each(&:best)
-              return seat_group
+        added_new_seat = false
+        
+        [left_seat, right_seat].each do |current_seat|
+          unless ungroupable.include?(current_seat) || seat_group.include?(current_seat)
+            if current_seat.row_num == good_seat.row_num && current_seat.available
+              seat_group << current_seat
+              checked_seats << current_seat
+              added_new_seat = true
+              if seat_group.length == count
+                seat_group.each { |seat| seat.best = true }
+                puts seat_group.each(&:best)
+                return seat_group
+              end
+            else
+              ungroupable << current_seat
             end
-          else
-            ungroupable << left_seat
-          end
-        end
-
-        unless ungroupable.include?(right_seat) || seat_group.include?(right_seat)
-          if right_seat.row_num == good_seat.row_num && right_seat.available
-            seat_group << right_seat
-            checked_seats << left_seat
-            added_new_seat = true
-            if seat_group.length == count
-              seat_group.each { |seat| seat.best = true }
-              puts seat_group.each(&:best)
-              return seat_group
-            end
-          else
-            ungroupable << right_seat
           end
         end
 
