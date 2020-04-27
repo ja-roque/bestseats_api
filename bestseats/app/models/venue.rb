@@ -29,7 +29,7 @@ class Venue
 
   def find_best_available_seats(count)
     seats_with_distance = @available_seats.map{ |available_seat| [available_seat, (available_seat.row_num - @best_seat.row_num).abs + (available_seat.col_num - @best_seat.col_num).abs] }
-    puts seats_with_distance
+    
     sorted_seats_by_distance = seats_with_distance.sort_by { |seat| seat.last }
     if count > 1
       best_group = get_best_group(sorted_seats_by_distance, @all_seats, count)
@@ -59,7 +59,7 @@ class Venue
         left_seat = all_seats[good_seat.sequence_num - i]
         right_seat = all_seats[good_seat.sequence_num + i]
         added_new_seat = false
-        
+
         [left_seat, right_seat].each do |current_seat|
           unless ungroupable.include?(current_seat) || seat_group.include?(current_seat)
             if current_seat.row_num == good_seat.row_num && current_seat.available
@@ -68,7 +68,7 @@ class Venue
               added_new_seat = true
               if seat_group.length == count
                 seat_group.each { |seat| seat.best = true }
-                puts seat_group.each(&:best)
+
                 return seat_group
               end
             else
