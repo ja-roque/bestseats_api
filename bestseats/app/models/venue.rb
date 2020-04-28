@@ -32,8 +32,8 @@ class Venue
 
     sorted_seats_by_distance = seats_with_distance.sort_by { |seat| seat.last }
     if count > 1
-      best_group = get_best_group(sorted_seats_by_distance, @all_seats, count)
-      return best_group if best_group
+      @best_seats = get_best_group(sorted_seats_by_distance, @all_seats, count)
+      return @best_seats if @best_seats
     end
     @best_seats = sorted_seats_by_distance.first(count).each{ |seat| seat.first.best = true}
   end
@@ -50,7 +50,7 @@ class Venue
       good_seat = good_seat.first
       next if checked_seats.include? good_seat
 
-      seat_group = [good_seat]
+      seat_group = [[good_seat]]
 
       1.upto(count) do |i|
         ungroupable = []
@@ -62,11 +62,11 @@ class Venue
         [left_seat, right_seat].each do |current_seat|
           unless ungroupable.include?(current_seat) || seat_group.include?(current_seat)
             if current_seat.row_num == good_seat.row_num && current_seat.available
-              seat_group << current_seat
+              seat_group << [current_seat]
               checked_seats << current_seat
               added_new_seat = true
               if seat_group.length == count
-                seat_group.each { |seat| seat.best = true }
+                seat_group.each { |seat| seat.first.best = true }
 
                 return seat_group
               end
