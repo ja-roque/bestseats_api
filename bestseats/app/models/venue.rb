@@ -1,5 +1,5 @@
 class Venue
-  attr_accessor :row_count, :column_count, :available_seats_hash, :data, :best_seat, :all_seats, :available_seats
+  attr_accessor :row_count, :column_count, :available_seats_hash, :data, :best_seat, :best_seats, :all_seats, :available_seats
   ALPH = ("a".."z").to_a
 
   def initialize( venue_data )
@@ -27,16 +27,15 @@ class Venue
     @best_seat = get_best_seat
   end
 
-  def find_best_available_seats(count)
+  def get_best_available_seats(count)
     seats_with_distance = @available_seats.map{ |available_seat| [available_seat, (available_seat.row_num - @best_seat.row_num).abs + (available_seat.col_num - @best_seat.col_num).abs] }
-    
+
     sorted_seats_by_distance = seats_with_distance.sort_by { |seat| seat.last }
     if count > 1
       best_group = get_best_group(sorted_seats_by_distance, @all_seats, count)
       return best_group if best_group
     end
-    best_seat = sorted_seats_by_distance.first(count).each{ |seat| seat.first.best = true}
-    best_seat
+    @best_seats = sorted_seats_by_distance.first(count).each{ |seat| seat.first.best = true}
   end
 
   private
