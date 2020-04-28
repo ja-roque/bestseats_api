@@ -4,7 +4,9 @@ It is a simple rails API
 Clone the repo, bundle install and run the rails server.
 
 ## Routes
-A single route accepting a POST was created: `/bestseat/show`
+Two routes accepting POSTs were created: `/bestseat/venue` and `bestseat/seats`
+The first one returns an array of all seats to render cool grid in FE.
+The second one returns an array of the best seats only.
 
 ## RSpec
 Tests were added to the models to check for the proper and intended parsing methods.
