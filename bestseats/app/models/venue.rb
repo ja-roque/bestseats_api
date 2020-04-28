@@ -3,18 +3,17 @@ class Venue
   ALPH = ("a".."z").to_a
 
   def initialize( venue_data )
+    # Parse the json input data from api
     venue_data =  venue_data.to_h
-
     @row_count = venue_data.dig(:venue, :layout, :rows)&.to_i
     @column_count = venue_data.dig(:venue, :layout, :columns)&.to_i
 
     char_to_num = ALPH.zip((0..@column_count*@row_count).step(@column_count).to_a).to_h
-
     @available_seats_hash = venue_data[:seats]
 
     venue = Array.new(@row_count)
     @data = venue.each_with_index do |_, rowindex|
-
+      # Loop through each row and add a seat to it
       venue[rowindex] = Array.new(@column_count) do |colindex|
         id = "#{ALPH[rowindex]}#{colindex+1}".to_sym
         Seat.new( (rowindex * @column_count) + colindex, id, rowindex, colindex, @available_seats_hash[id].present? )
@@ -29,7 +28,7 @@ class Venue
 
   def get_best_available_seats(count)
     seats_with_distance = @available_seats.map{ |available_seat| [available_seat, (available_seat.row_num - @best_seat.row_num).abs + (available_seat.col_num - @best_seat.col_num).abs] }
-
+    # Sort by distance to create an ordered array of seats from best to worst.
     sorted_seats_by_distance = seats_with_distance.sort_by { |seat| seat.last }
     if count > 1
       @best_seats = get_best_group(sorted_seats_by_distance, @all_seats, count)
@@ -65,11 +64,12 @@ class Venue
               seat_group << [current_seat]
               checked_seats << current_seat
               added_new_seat = true
+
               if seat_group.length == count
                 seat_group.each { |seat| seat.first.best = true }
-
                 return seat_group
               end
+              
             else
               ungroupable << current_seat
             end
